@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Application</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #app {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select,
+        input,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .payment-result {
+            margin-top: 20px;
+        }
+
+        .transaction-status,
+        .discount-amount {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .user-satisfaction,
+        .transaction-status {
+            background-color: #f2f2f2;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .rating {
+            list-style-type: none;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #e6f7ff;
+            border: 1px solid #99c2ff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <label for="satisfaction">User Satisfaction (1-5):</label>
+    <input class="user-satisfaction-input" type="number" v-model="userSatisfaction" min="1" max="5">
+
+    <button class="process-payment-btn" @click="processPayment">Process Payment</button>
+
+    <div class="payment-result" v-if="transactionStatus">
+        <p class="transaction-status">Transaction Status: {{ transactionStatus }}</p>
+        <p v-if="transactionStatus === 'successful'" class="discount-amount">Discounted Amount: ${{ discountedAmount }}</p>
+    </div>
+
+    <div class="user-satisfaction">
+        <h2>Last Five User Ratings</h2>
+        <ul>
+            <li v-for="rating in userRatings.slice().reverse()" :key="rating" class="rating">{{ rating }}/5</li>
+        </ul>
+    </div>
+
+    <div class="transaction-status">
+        <h2>Last Five Transaction Status</h2>
+        <ul>
+            <li v-for="status in transactionStatuses.slice().reverse()" :key="status">{{ status }}</li>
+        </ul>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            userSatisfaction: 5,
+            transactionStatus: null,
+            discountedAmount: null,
+            userRatings: [],
+            transactionStatuses: [],
+        },
+        methods: {
+            processPayment() {
+                // Replace this with your logic to send data to the backend
+                console.log('User Satisfaction:', this.userSatisfaction);
+
+                // Simulate a transaction
+                const transactionStatus = Math.random() < 0.8 ? 'successful' : 'failed';
+
+                // Update user ratings and transaction statuses history
+                this.userRatings.push(this.userSatisfaction);
+                this.transactionStatuses.push(transactionStatus);
+
+                // Keep only the last five entries in the history
+                if (this.userRatings.length > 5) {
+                    this.userRatings.shift();
+                }
+                if (this.transactionStatuses.length > 5) {
+                    this.transactionStatuses.shift();
+                }
+
+                // Display the transaction status
+                this.transactionStatus = transactionStatus;
+
+                // Add logic to send data to the backend and handle the response
+            },
+        },
+    });
+</script>
+
+</body>
+</html>
